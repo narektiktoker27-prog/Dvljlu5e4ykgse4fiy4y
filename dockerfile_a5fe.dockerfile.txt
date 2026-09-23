@@ -1,0 +1,22 @@
+# Օգտագործում ենք թեթև Alpine Linux պատկերը
+FROM alpine:latest
+
+# Ավելացնում ենք անհրաժեշտ փաթեթները
+RUN apk add --no-cache python3 py3-pip
+
+# Ստեղծում ենք թղթապանակ ծրագրի համար
+WORKDIR /app
+
+# Տեղադրում ենք Python գրադարանները
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Ներբեռնում ենք և տեղադրում ենք cloudflared-ը
+# Տարբեր հարթակների համար կարող է պահանջվել տարբեր տարբերակ, այստեղ amd64
+RUN wget -q https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -O /usr/local/bin/cloudflared && \
+    chmod +x /usr/local/bin/cloudflared
+
+# Պահում ենք կոդը
+COPY webphish10.py .
+
+# Սկսում ենք ծրագիրը
+CMD ["python", "webphish10.py"]
